@@ -2,13 +2,18 @@ package hello.hellospring.service;
 
 import hello.hellospring.domain.Member;
 import hello.hellospring.repository.MemberRepository;
-import hello.hellospring.repository.MemoryMemberRepository;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class MemberService {
 
-  private final MemberRepository memberRepository = new MemoryMemberRepository();
+  private final MemberRepository memberRepository;
+
+  @Autowired
+  public MemberService(MemberRepository memberRepository) {
+    this.memberRepository = memberRepository;
+  }
 
   /**
    * 회원가입
@@ -38,4 +43,5 @@ public class MemberService {
   public Optional<Member> findOne(Long memberId) {
     return memberRepository.findById(memberId);
   }
+
 }
