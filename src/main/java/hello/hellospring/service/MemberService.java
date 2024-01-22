@@ -5,9 +5,11 @@ import hello.hellospring.repository.MemberRepository;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
+@Service
 public class MemberService {
 
   private final MemberRepository memberRepository;
@@ -23,10 +25,19 @@ public class MemberService {
   public Long join(Member member) {
     //같은 이름이 있는 중복 회원X
 
+    long start = System.currentTimeMillis();
+
+    try {
+
     validateDuplicateMember(member);
     memberRepository.save(member);
     return member.getId();
-  }
+  } finally {
+      long finish = System.currentTimeMillis();
+      long timeMs = finish - start;
+      System.out.println("join =" + timeMs + "ms");
+    }
+    }
 
   private void validateDuplicateMember(Member member) {
     memberRepository.findByName(member.getName())
